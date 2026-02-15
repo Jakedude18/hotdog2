@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Joe's Hotdogs</title>
+    <script>
+        function makeSelect(name, max) {
+            s = "<select name= '" + name + "' >"
+            for (i = 0; i < max; i++)
+                s += "<option>" + i + "</option>"
+            s += "</select>"
+            return s;
+        }
+        function MenuItem(name, desc, price) {
+            this.name = name;
+            this.description = desc;
+            this.price = price;
+            this.quantity = 0;
+            this.showMenuItem = function () {
+                document.write("<div class='one-item'>")
+                document.write("<span>" + this.name + "</span>")
+                document.write("<span>" + " " + this.description + "</span><br>")
+                document.write("<span> $" + this.price + "</span>")
+                cost = this.price * this.quantity
+                document.write("</div>")
+
+
+            }
+        }
+
+
+        function showMoney(cost) {
+            return (Math.floor(cost * 100) / 100).toString()
+        }
+
+
+
+    </script>
+</head>
+
+<body>
+    <script>
+
+        //show specials
+        specials = "joe’s meal deal for $10 (1 hot dog, 1 french fries and a drink).  And, users get a 10% discount on any order totaling $30 (before tax)"
+        window.onload = function () {
+            alert(specials)
+        };
+
+        //Ask how many of each item the user wants
+
+        const HOTDOG_PRICE = 6
+        const BEVERAGE_PRICE = 2
+        const FRIES_PRICE = 3
+
+        prices = []
+        prices["dog"] = HOTDOG_PRICE
+        prices["bev"] = BEVERAGE_PRICE
+        prices["fry"] = FRIES_PRICE
+
+
+        //Display Menu
+        joesMenu = new Array(
+            new MenuItem("Hotdog", "1/4 pound - tastes great", HOTDOG_PRICE),
+            new MenuItem("Beverage", "Choose coke or lemonade ", BEVERAGE_PRICE),
+            new MenuItem("Fries", "Hot and crispy", FRIES_PRICE)
+        )
+        joesMenu.forEach(item => { item.showMenuItem() })
+
+        //add order button
+        document.write("<button id='orderButton'>Place an Order</button>")
+        const btn = document.getElementById("orderButton");
+
+
+
+        btn.addEventListener("click", () => {
+            quantities = []
+
+            quantities["dog"] = prompt("how many hotdogs would you like")
+            quantities["bev"] = prompt("how many beverages would you like")
+            quantities["fry"] = prompt("how many orders of fries would you like")
+
+            //fill in table
+            for (food in quantities){
+                document.getElementById(food + "Count").textContent = quantities[food]
+            }
+
+
+
+            subtotal = 0
+            costs = []
+            for (food in prices){
+                costs[food] = prices[food] * quantities[food]
+            }
+            
+
+            for (food in quantities){
+                document.getElementById(food + "Cost").textContent = costs[food]
+            }
+
+
+
+            //adjust price for deal
+            subtotal = 0;
+            for (food in costs) {
+                subtotal += costs[food];
+            }
+            quantities
+            maxSets = Math.min(...Object.values(quantities));
+            subtotal -= maxSets
+
+            discount = 0
+            if (subtotal > 30) {
+                discount = subtotal / 10
+            }
+
+            total = subtotal - discount
+
+            tax = total * .0625
+
+            finalTotal = subtotal + tax
+
+            document.getElementById("subtotal").textContent = showMoney(subtotal)
+            document.getElementById("discounts").textContent = showMoney(discount)
+            document.getElementById("discounted").textContent = showMoney(total)
+            document.getElementById("final amount").textContent = showMoney(finalTotal)
+
+        })
+
+    </script>
+
+    <!-- quantity of each item ordered and the total cost for that item
+subtotal before discount
+discounts, if applicable
+subtotal after discount
+tax amount
+final total -->
+
+    <table id="orderTable">
+        <tr>
+            <th> </th>
+            <th> hotdogs </th>
+            <th> beverages </th>
+            <th> fries </th>
+        </tr>
+        <tr>
+            <td> <b> quanity </b> </td>
+            <td id="dogCount"></td>
+            <td id="bevCount"></td>
+            <td id="fryCount"></td>
+        </tr>
+
+        <tr>
+            <td> <b> cost </b> </td>
+            <td id="dogCost"></td>
+            <td id="bevCost"></td>
+            <td id="fryCost"></td>
+        </tr>
+    </table>
+
+
+    <table id="costTable">
+        <tr>
+            <th>subtotal</th>
+            <th>discount</th>
+            <th>discounted subtotal</th>
+            <th>final amount</th>
+        </tr>
+        
+        <td id="subtotal"></td>
+        <td id="discounts"></td>
+        <td id="discounted"></td>
+        <td id="final amount"></td>
+    </table>
+
+
+
+</body>
+
+</html>
